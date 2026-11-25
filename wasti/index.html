@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f161c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>ملفات المواقع</title>
+<style>
+:root{--bg:#0f161c;--surf:#17222b;--surf2:#1e2d38;--line:#2b3d4a;--tx:#e8eef3;--mute:#93a7b4;--acc:#5fd0bf;--acc-ink:#06211d;--warn:#f2b25c;--bad:#ff9a9a;--ok:#7fd99a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 "Noto Naskh Arabic","Noto Sans Arabic",Tahoma,Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{background:linear-gradient(130deg,#15323c,#11222e);border-bottom:1px solid var(--line);padding:calc(18px + env(safe-area-inset-top)) 18px 16px}
+h1{margin:0;font-size:22px}
+header p{margin:2px 0 0;color:#a8c7d0;font-size:13px}
+main{max-width:820px;margin:auto;padding:16px}
+h2{font-size:20px;margin:6px 0 10px}
+h3{font-size:17px;margin:0 0 6px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:var(--acc);color:var(--acc-ink);border:1px solid var(--acc);border-radius:12px;min-height:46px;padding:8px 14px;font-weight:700;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #fff8;outline-offset:2px}
+button.sec{background:var(--surf2);color:#bfece5;border-color:#3d5969}
+button.bad{background:transparent;color:var(--bad);border-color:#895052}
+button:disabled{opacity:.45}
+input,select,textarea{display:block;width:100%;background:var(--surf2);border:1px solid var(--line);border-radius:10px;padding:11px;margin:6px 0 14px}
+textarea{min-height:130px;resize:vertical}
+label{display:block;font-weight:700;font-size:14px;color:#c9d7df}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0;overflow-wrap:anywhere}
+.muted{color:var(--mute);font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.row>button{flex:1 1 130px}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 16px}
+.grp{background:var(--surf);color:#bfece5;border-color:var(--line);text-align:start;min-height:76px;font-weight:600}
+.grp.on{background:var(--acc);color:var(--acc-ink)}
+.grp small{display:block;font-weight:400;opacity:.85}
+.site{display:block;width:100%;text-align:start;background:var(--surf);color:var(--tx);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;font-weight:400}
+.site strong{display:block;font-size:18px;margin:4px 0}
+.site .muted{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chip{font-size:12px;border-radius:99px;padding:1px 10px;background:var(--surf2);border:1px solid var(--line);color:#c9d7df}
+.chip.ok{color:var(--ok);border-color:#2f6a43}.chip.warn{color:var(--warn);border-color:#7a5a25}
+nav{position:fixed;inset:auto 0 0 0;display:flex;gap:8px;background:#111e29;border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));z-index:5}
+nav button{flex:1;background:transparent;color:#a8c7d0;border-color:transparent;min-height:50px}
+nav button.on{background:var(--surf2);color:var(--acc);border-color:#3d5969}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.file{background:var(--surf2);border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px;overflow-wrap:anywhere}
+.file img,.file video{width:100%;height:96px;object-fit:cover;border-radius:6px;display:block;margin-bottom:4px;background:#000}
+.file audio{width:100%}
+.file button{min-height:34px;padding:2px 8px;font-size:12px;margin-top:4px}
+.toast{position:fixed;inset:auto 14px calc(90px + env(safe-area-inset-bottom)) 14px;background:#153744;border:1px solid #2f6577;border-radius:12px;padding:12px 14px;z-index:30;white-space:pre-wrap}
+.ov{position:fixed;inset:0;background:#000a;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:18px 18px 0 0;padding:18px;width:100%;max-width:640px;max-height:92%;overflow:auto}
+.status{white-space:pre-wrap;color:#c1d0db;font-size:14px;min-height:20px}
+.bar{height:8px;border-radius:5px;background:var(--surf2);overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--acc)}
+.warn-box{background:#2a2316;border:1px solid #7a5a25;border-radius:12px;padding:12px;font-size:14px;color:#f5d9a8}
+bdi{unicode-bidi:isolate}
+.hd{display:flex;align-items:center;gap:12px}
+.hd button.menu{flex:0 0 48px;width:48px;min-height:48px;padding:0;font-size:24px;line-height:1}
+.dov{position:fixed;inset:0;background:#000a;z-index:25}
+.drawer{position:absolute;top:0;bottom:0;inset-inline-start:0;width:min(310px,84vw);background:var(--surf);border-inline-end:1px solid var(--line);padding:calc(18px + env(safe-area-inset-top)) 16px 16px;overflow:auto;animation:slin .2s ease-out}
+@keyframes slin{from{transform:translateX(100%)}to{transform:none}}
+.drawer .grp{width:100%;margin:6px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>const SITES=[{"id":"R001","c":"منظمات قطاعات","l":"Reg. 63-1","k":"Reg. 63-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R002","c":"منظمات قطاعات","l":"Reg. 63-2","k":"Reg. 63-2","m":[1,4,7,10],"g":0,"r":0},{"id":"R003","c":"منظمات قطاعات","l":"Reg. 64","k":"Reg. 64","m":[1,4,7,10],"g":0,"r":0},{"id":"R004","c":"منظمات قطاعات","l":"Reg. 67","k":"Reg. 67","m":[1,4,7,10],"g":0,"r":0},{"id":"R005","c":"منظمات قطاعات","l":"Reg. 70","k":"Reg. 70","m":[1,4,7,10],"g":0,"r":0},{"id":"R006","c":"منظمات قطاعات","l":"Reg. 01-79","k":"Reg. 01-79","m":[1,4,7,10],"g":0,"r":0},{"id":"R007","c":"منظمات قطاعات","l":"Reg. 01-81","k":"Reg. 01-81","m":[1,4,7,10],"g":0,"r":0},{"id":"R008","c":"منظمات قطاعات","l":"Reg. 56-1","k":"Reg. 56-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R009","c":"منظمات قطاعات","l":"Reg. 56-2","k":"Reg. 56-2","m":[1,4,7,10],"g":0,"r":0},{"id":"R010","c":"منظمات قطاعات","l":"Reg.150-1","k":"Reg.150-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R011","c":"منظمات قطاعات","l":"Reg.150-2","k":"Reg.150-2","m":[1,4,7,10],"g":0,"r":0},{"id":"R012","c":"منظمات قطاعات","l":"Reg.03-1","k":"Reg.03-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R013","c":"منظمات قطاعات","l":"Reg.03-2","k":"Reg.03-2","m":[1,4,7,10],"g":0,"r":0},{"id":"R014","c":"منظمات قطاعات","l":"Reg.03-4-7","k":"Reg.03-4-7","m":[1,4,7,10],"g":0,"r":0},{"id":"R015","c":"منظمات قطاعات","l":"Reg.03-5","k":"Reg.03-5","m":[1,4,7,10],"g":0,"r":0},{"id":"R016","c":"منظمات قطاعات","l":"Reg.03-5-7","k":"Reg.03-5-7","m":[1,4,7,10],"g":0,"r":0},{"id":"R017","c":"منظمات قطاعات","l":"Reg. 07-1","k":"Reg. 07-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R018","c":"منظمات قطاعات","l":"Reg. 07-2","k":"Reg. 07-2","m":[1,4,7,10],"g":0,"r":0},{"id":"R019","c":"منظمات قطاعات","l":"Reg. 07-3","k":"Reg. 07-3","m":[1,4,7,10],"g":0,"r":0},{"id":"R020","c":"منظمات قطاعات","l":"Reg. 07-10-1","k":"Reg. 07-10-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R021","c":"منظمات قطاعات","l":"Reg. 07-11-1","k":"Reg. 07-11-1","m":[1,4,7,10],"g":0,"r":0},{"id":"R022","c":"منظمات قطاعات","l":"DRS 1","k":"DRS 1","m":[1,4,7,10],"g":0,"r":0},{"id":"R023","c":"منظمات قطاعات","l":"DRS 5","k":"DRS 5","m":[1,4,7,10],"g":0,"r":0},{"id":"F201","c":"مصانع","l":"أنجل بيست إيجيبت","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F202","c":"مصانع","l":"باستا فودز مصر","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F203","c":"مصانع","l":"الراعى لفرز وتجهيز وتجفيف حاصلات زراعية","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F204","c":"مصانع","l":"بنى سويف الجديدة لحفظ وتجفيف الخضراوات","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F205","c":"مصانع","l":"السويسريه للملابس القطنية","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F206","c":"مصانع","l":"مكة لصناعة الأعلاف","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F207","c":"مصانع","l":"حورس ادفو للصناعات التكميليه والتحويليه للورق","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F208","c":"مصانع","l":"فيدمكس إيجيبت لصناعة الأعلاف","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F211","c":"مصانع","l":"الكرمة للأعلاف الحيوانيه والداجنه","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F212","c":"مصانع","l":"مطاحن الفطام","k":"","m":[1,4,7,10],"g":0,"r":1},{"id":"F216","c":"مصانع","l":"النور والبركه","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F217","c":"مصانع","l":"خطاب","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F301","c":"مصانع","l":"المصريه الألمانية للصناعات الإنشائية","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F303","c":"مصانع","l":"الفرنسيه لصناعة البورسلين","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F307","c":"مصانع","l":"الماسه لاعادة تدوير الورق وتصنيعه","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F308","c":"مصانع","l":"بنى سويف لتصنيع خام الكرتون","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F309","c":"مصانع","l":"انترناشيونال لصناعة الورق","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F311","c":"مصانع","l":"مصنع اللوتس لصناعة الورق","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F312","c":"مصانع","l":"سنتر فيد إنترناشيونال","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F313","c":"مصانع","l":"الفكهانيه للاستيراد والتصدير","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"F314","c":"مصانع","l":"الإقتصادية للصناعات الغذائية \"كمارا\"","k":"","m":[1,4,7,10],"g":0,"r":0},{"id":"R401","c":"منظمات قطاعات","l":"Reg.02- 216-217","k":"Reg.02- 216-217","m":[2,5,8,11],"g":1,"r":0},{"id":"R402","c":"منظمات قطاعات","l":"Reg.02- 218","k":"Reg.02- 218","m":[2,5,8,11],"g":1,"r":0},{"id":"R403","c":"منظمات قطاعات","l":"Reg.02- 219","k":"Reg.02- 219","m":[2,5,8,11],"g":1,"r":0},{"id":"R404","c":"منظمات قطاعات","l":"Reg.02- 225","k":"Reg.02- 225","m":[2,5,8,11],"g":1,"r":0},{"id":"R405","c":"منظمات قطاعات","l":"Reg.02- 220","k":"Reg.02- 220","m":[2,5,8,11],"g":1,"r":0},{"id":"R406","c":"منظمات قطاعات","l":"Reg.02- 221","k":"Reg.02- 221","m":[2,5,8,11],"g":1,"r":0},{"id":"R407","c":"منظمات قطاعات","l":"Reg.02- 223","k":"Reg.02- 223","m":[2,5,8,11],"g":1,"r":0},{"id":"R408","c":"منظمات قطاعات","l":"Reg.02- 226/1","k":"Reg.02- 226/1","m":[2,5,8,11],"g":1,"r":0},{"id":"R409","c":"منظمات قطاعات","l":"Reg.02-226-2","k":"Reg.02-226-2","m":[2,5,8,11],"g":1,"r":0},{"id":"R410","c":"منظمات قطاعات","l":"Reg.02- 227","k":"Reg.02- 227","m":[2,5,8,11],"g":1,"r":0},{"id":"R411","c":"منظمات قطاعات","l":"Reg. 02-250","k":"Reg. 02-250","m":[2,5,8,11],"g":1,"r":0},{"id":"R412","c":"منظمات قطاعات","l":"Reg. 02-252-1","k":"Reg. 02-252-1","m":[2,5,8,11],"g":1,"r":0},{"id":"R413","c":"منظمات قطاعات","l":"Reg. 02-251-1","k":"Reg. 02-251-1","m":[2,5,8,11],"g":1,"r":0},{"id":"R414","c":"منظمات قطاعات","l":"Reg. 02-251-2","k":"Reg. 02-251-2","m":[2,5,8,11],"g":1,"r":0},{"id":"R415","c":"منظمات قطاعات","l":"Reg. 08-01","k":"Reg. 08-01","m":[2,5,8,11],"g":1,"r":0},{"id":"R416","c":"منظمات قطاعات","l":"Reg. 08-02","k":"Reg. 08-02","m":[2,5,8,11],"g":1,"r":0},{"id":"R417","c":"منظمات قطاعات","l":"Reg. 08-03","k":"Reg. 08-03","m":[2,5,8,11],"g":1,"r":0},{"id":"R418","c":"منظمات قطاعات","l":"Reg. 08-04","k":"Reg. 08-04","m":[2,5,8,11],"g":1,"r":0},{"id":"R419","c":"منظمات قطاعات","l":"Reg. 08-06","k":"Reg. 08-06","m":[2,5,8,11],"g":1,"r":0},{"id":"R420","c":"منظمات قطاعات","l":"Reg. 08-07","k":"Reg. 08-07","m":[2,5,8,11],"g":1,"r":0},{"id":"R421","c":"منظمات قطاعات","l":"BA","k":"BA","m":[2,5,8,11],"g":1,"r":0},{"id":"R422","c":"منظمات قطاعات","l":"MI","k":"MI","m":[2,5,8,11],"g":1,"r":0},{"id":"F501","c":"مصانع","l":"أحمد محمد عوض الله طلبة","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F502","c":"مصانع","l":"الرحمن للطوب الطفلي","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F503","c":"مصانع","l":"دهيدرو فودز","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F504","c":"مصانع","l":"هيلثى فودز إيجيبت","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F505","c":"مصانع","l":"إيمسا دينيم لصناعة الألبسة الجاهزة","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F506","c":"مصانع","l":"أبو علام للطوب الطفلى","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F507","c":"مصانع","l":"النصر لتصنيع الحاصلات الزراعية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F508","c":"مصانع","l":"ريد مكس للخرسانات الجاهزة","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F509","c":"مصانع","l":"بنى سويف للعزل الحرارى","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F510","c":"مصانع","l":"السلمى لمجازر الدواجن - دجدوجة","k":"","m":[2,5,8,11],"g":1,"r":1},{"id":"F511","c":"مصانع","l":"كرمان للصناعات الدوائية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F512","c":"مصانع","l":"أدوية حكمة للصناعات الدوائية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F514","c":"مصانع","l":"العالمية لصناعة الورق","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F518","c":"مصانع","l":"المحبة لتجفيف النباتات العطرية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F602","c":"مصانع","l":"نور نايل تكستايلز","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F605","c":"مصانع","l":"المصرية الهولندية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F608","c":"مصانع","l":"مجدى صبرى إسماعيل شوشه","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F609","c":"مصانع","l":"المصرية الفرنسية للصناعات الغذائية","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F610","c":"مصانع","l":"إبوس إيجيبت","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F612","c":"مصانع","l":"بنى سويف للصناعات الغذائية (الحوتى)","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"F618","c":"مصانع","l":"إيلاف للصناعة والتجارة","k":"","m":[2,5,8,11],"g":1,"r":0},{"id":"R701","c":"منظمات قطاعات","l":"Reg. 02-204-01","k":"Reg. 02-204-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R702","c":"منظمات قطاعات","l":"Reg. 02-204-02","k":"Reg. 02-204-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R703","c":"منظمات قطاعات","l":"Reg. 02-207","k":"Reg. 02-207","m":[3,6,9,12],"g":2,"r":0},{"id":"R704","c":"منظمات قطاعات","l":"Reg. 02-209","k":"Reg. 02-209","m":[3,6,9,12],"g":2,"r":0},{"id":"R705","c":"منظمات قطاعات","l":"Reg. 02-211","k":"Reg. 02-211","m":[3,6,9,12],"g":2,"r":0},{"id":"R706","c":"منظمات قطاعات","l":"Reg. 02-212","k":"Reg. 02-212","m":[3,6,9,12],"g":2,"r":0},{"id":"R707","c":"منظمات قطاعات","l":"Reg. 02-213","k":"Reg. 02-213","m":[3,6,9,12],"g":2,"r":0},{"id":"R708","c":"منظمات قطاعات","l":"Reg. 02-201-01","k":"Reg. 02-201-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R709","c":"منظمات قطاعات","l":"Reg. 02-201-02","k":"Reg. 02-201-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R710","c":"منظمات قطاعات","l":"Reg. 02-205-01","k":"Reg. 02-205-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R711","c":"منظمات قطاعات","l":"Reg. 02-205-02","k":"Reg. 02-205-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R712","c":"منظمات قطاعات","l":"Reg. 02-206-01","k":"Reg. 02-206-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R713","c":"منظمات قطاعات","l":"Reg. 02-206-02","k":"Reg. 02-206-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R714","c":"منظمات قطاعات","l":"Reg. 02-208-01","k":"Reg. 02-208-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R715","c":"منظمات قطاعات","l":"Reg. 02-208-02","k":"Reg. 02-208-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R716","c":"منظمات قطاعات","l":"Reg. 02-206-03","k":"Reg. 02-206-03","m":[3,6,9,12],"g":2,"r":0},{"id":"R717","c":"منظمات قطاعات","l":"Reg. 02-210-01","k":"Reg. 02-210-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R718","c":"منظمات قطاعات","l":"Reg. 02-210-02","k":"Reg. 02-210-02","m":[3,6,9,12],"g":2,"r":0},{"id":"R719","c":"منظمات قطاعات","l":"Reg. 02-203-01","k":"Reg. 02-203-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R720","c":"منظمات قطاعات","l":"Reg. 02-214-01","k":"Reg. 02-214-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R721","c":"منظمات قطاعات","l":"Reg. 02-215-01","k":"Reg. 02-215-01","m":[3,6,9,12],"g":2,"r":0},{"id":"R722","c":"منظمات قطاعات","l":"DRS 2","k":"DRS 2","m":[3,6,9,12],"g":2,"r":0},{"id":"R723","c":"منظمات قطاعات","l":"DRS 3","k":"DRS 3","m":[3,6,9,12],"g":2,"r":0},{"id":"R724","c":"منظمات قطاعات","l":"DRS 4","k":"DRS 4","m":[3,6,9,12],"g":2,"r":0},{"id":"R725","c":"منظمات قطاعات","l":"KR","k":"KR","m":[3,6,9,12],"g":2,"r":0},{"id":"F802","c":"مصانع","l":"حسان عيد مصطفى اسماعيل","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F808","c":"مصانع","l":"كور للمحركات الكهربية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F811","c":"مصانع","l":"بلانتفورم للصناعات الغذائية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F814","c":"مصانع","l":"الوطنية لصناعة الأجهزة المنزلية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F901","c":"مصانع","l":"مايوركا للاستثمار السياحى وصناعة السيراميك","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F902","c":"مصانع","l":"سامسونج الكترونيكس مصر","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F903","c":"مصانع","l":"انداجرو للصناعات الغذائية والزراعية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F904","c":"مصانع","l":"الشرق لصناعة السيراميك و البورسلين","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F905","c":"مصانع","l":"الدولية لصناعة السيراميك - سيراميكا وندى","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F906","c":"مصانع","l":"ايديتا لصناعة الحلويات","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F907","c":"مصانع","l":"الوطنية للصناعات المعدنية والمنزلية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F908","c":"مصانع","l":"إيل هوا إيجيبت للمنسوجات","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F910","c":"مصانع","l":"حديد المصريين","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"F911","c":"مصانع","l":"المتحده للصناعات الغذائية","k":"","m":[3,6,9,12],"g":2,"r":0},{"id":"H1001","c":"حياة كريمة","l":"الحرجه 1","k":"03-40-1","m":[],"g":3,"r":0},{"id":"H1002","c":"حياة كريمة","l":"الحرجه 2","k":"03-40-2","m":[],"g":3,"r":0},{"id":"H1003","c":"حياة كريمة","l":"منشاه هديب","k":"03-45","m":[],"g":3,"r":0},{"id":"H1004","c":"حياة كريمة","l":"طحا بوش","k":"03-10","m":[],"g":3,"r":0},{"id":"H1005","c":"حياة كريمة","l":"البرج","k":"03-32","m":[],"g":3,"r":0},{"id":"H1101","c":"حياة كريمة","l":"بهمشين 1","k":"03-25","m":[],"g":3,"r":0},{"id":"H1102","c":"حياة كريمة","l":"بهمشين 2","k":"03-26","m":[],"g":3,"r":0},{"id":"H1103","c":"حياة كريمة","l":"دنديل","k":"03-30","m":[],"g":3,"r":0},{"id":"H1104","c":"حياة كريمة","l":"بني خليفة","k":"03-43","m":[],"g":3,"r":0},{"id":"H1105","c":"حياة كريمة","l":"المنصورة","k":"03-42","m":[],"g":3,"r":0},{"id":"H1201","c":"حياة كريمة","l":"دلاص 1","k":"03-21-1","m":[],"g":3,"r":0},{"id":"H1202","c":"حياة كريمة","l":"دلاص 2","k":"03-21-2","m":[],"g":3,"r":0},{"id":"H1203","c":"حياة كريمة","l":"بني عدي 1","k":"03-20-1","m":[],"g":3,"r":0},{"id":"H1204","c":"حياة كريمة","l":"بني عدي 2","k":"03-20-2","m":[],"g":3,"r":0},{"id":"H1205","c":"حياة كريمة","l":"الرياض 1","k":"03-19-1","m":[],"g":3,"r":0},{"id":"H1206","c":"حياة كريمة","l":"الرياض 2","k":"03-19-2","m":[],"g":3,"r":0},{"id":"H1207","c":"حياة كريمة","l":"الزيتون 1","k":"03-11","m":[],"g":3,"r":0},{"id":"H1208","c":"حياة كريمة","l":"الزيتون 2","k":"03-12","m":[],"g":3,"r":0},{"id":"H1301","c":"حياة كريمة","l":"هربشنت","k":"07-53","m":[],"g":3,"r":0},{"id":"H1302","c":"حياة كريمة","l":"الفقاعي","k":"07-47","m":[],"g":3,"r":0},{"id":"H1303","c":"حياة كريمة","l":"كفر جمعه","k":"07-46","m":[],"g":3,"r":0},{"id":"H1304","c":"حياة كريمة","l":"منيه الجيد","k":"07-50","m":[],"g":3,"r":0},{"id":"H1305","c":"حياة كريمة","l":"طحا البيشه","k":"07-13","m":[],"g":3,"r":0},{"id":"H1306","c":"حياة كريمة","l":"غياضه الغربيه","k":"07-14","m":[],"g":3,"r":0},{"id":"H1307","c":"حياة كريمة","l":"بني قاسم","k":"07-12","m":[],"g":3,"r":0},{"id":"H1401","c":"حياة كريمة","l":"نزله الزاويه","k":"07-57","m":[],"g":3,"r":0},{"id":"H1402","c":"حياة كريمة","l":"حسن علام","k":"07-60","m":[],"g":3,"r":0},{"id":"H1403","c":"حياة كريمة","l":"زاويه الناويه","k":"07-62","m":[],"g":3,"r":0},{"id":"H1404","c":"حياة كريمة","l":"بني ماضي","k":"07-73","m":[],"g":3,"r":0},{"id":"H1405","c":"حياة كريمة","l":"طنسا 1","k":"07-25-01","m":[],"g":3,"r":0},{"id":"H1406","c":"حياة كريمة","l":"طنسا 2","k":"07-25-02","m":[],"g":3,"r":0},{"id":"H1501","c":"حياة كريمة","l":"البرانقه","k":"07-72","m":[],"g":3,"r":0},{"id":"H1502","c":"حياة كريمة","l":"ام الجنازير","k":"07-74","m":[],"g":3,"r":0},{"id":"H1503","c":"حياة كريمة","l":"بني عوض","k":"07-76","m":[],"g":3,"r":0},{"id":"H1504","c":"حياة كريمة","l":"الملاحيه","k":"07-83","m":[],"g":3,"r":0},{"id":"H1505","c":"حياة كريمة","l":"الضباعنه","k":"07-82","m":[],"g":3,"r":0},{"id":"H1506","c":"حياة كريمة","l":"فزاره 1","k":"07-44-01","m":[],"g":3,"r":0},{"id":"H1507","c":"حياة كريمة","l":"فزاره 2","k":"07-44-02","m":[],"g":3,"r":0}];const APP_VERSION='2.2.0';
+/* ===== رابط مستقبل Google Drive (يتحط مرة واحدة هنا، من غير رمز سري) =====
+   الفنيين بيرفعوا عليه علطول ومش بيشوفوا أي إعدادات. */
+const DRIVE_URL='https://script.google.com/macros/s/AKfycbzbkIODSdko9NVfwTg3KwKBsbdHLGOuSPbnBgFvWrf2F_TvWk4Z-GF1TBn0Z3ZDvf0KdQ/exec';
+const LOCK=1; /* قفل النسخة على منظمة واحدة: 0 بني سويف، 1 الواسطي، 2 الفشن — نسخة الجذر (المدير) تفضل null */
+const ORGS=['بني سويف','الواسطي','الفشن'];</script>
+<script>
+'use strict';
+/* ---------- helpers ---------- */
+const GN=['شهور 1، 4، 7، 10','شهور 2، 5، 8، 11','شهور 3، 6، 9، 12','حياة كريمة'];
+const CATS=['منظمات قطاعات','مصانع','حياة كريمة'];
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,'');else if(v!==false&&v!=null)e.setAttribute(k,v)}for(const c of kids.flat(Infinity)){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(String(c)))}return e}
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,10));
+const fmtSize=n=>n>=1e9?(n/1e9).toFixed(2)+' جيجا':n>=1e6?(n/1e6).toFixed(1)+' ميجا':Math.max(1,Math.round(n/1e3))+' كيلو';
+const fmtDate=t=>new Date(t).toLocaleString('ar-EG-u-nu-latn',{dateStyle:'medium',timeStyle:'short'});
+const safeName=n=>String(n).replace(/[\\/:*?"<>|\x00-\x1f]/g,'_').slice(0,80)||'file';
+const kindOf=t=>t.startsWith('image/')?'image':t.startsWith('video/')?'video':t.startsWith('audio/')?'audio':'doc';
+let toastT;function toast(t){document.querySelector('.toast')?.remove();const e=h('div',{class:'toast',role:'status'},t);document.body.append(e);clearTimeout(toastT);toastT=setTimeout(()=>e.remove(),5000)}
+function modal(title,nodes,actions){const ov=h('div',{class:'ov'});const close=()=>ov.remove();ov.append(h('div',{class:'box',role:'dialog','aria-label':title},h('h3',{},title),nodes,h('div',{class:'row'},actions(close))));ov.addEventListener('click',e=>{if(e.target===ov)close()});document.body.append(ov);return close}
+const mapLink=c=>`https://www.google.com/maps?q=${c.lat},${c.lng}`;
+
+/* ---------- IndexedDB ---------- */
+let _db;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('sitefiles-v1',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('kv');d.createObjectStore('sites',{keyPath:'id'});d.createObjectStore('geo',{keyPath:'siteId'});d.createObjectStore('visits',{keyPath:'id'});d.createObjectStore('blobs',{keyPath:'id'}).createIndex('visitId','visitId')};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function tx(store,mode,fn){return new Promise((res,rej)=>{const t=_db.transaction(store,mode);let out;const q=fn(t.objectStore(store));if(q&&'onsuccess'in q)q.onsuccess=()=>out=q.result;t.oncomplete=()=>res(out);t.onerror=t.onabort=()=>rej(t.error)})}
+const dbGet=(s,k)=>tx(s,'readonly',o=>o.get(k));
+const dbPut=(s,v,k)=>tx(s,'readwrite',o=>k===undefined?o.put(v):o.put(v,k));
+const dbDel=(s,k)=>tx(s,'readwrite',o=>o.delete(k));
+const dbAll=s=>tx(s,'readonly',o=>o.getAll());
+const dbFiles=vid=>tx('blobs','readonly',o=>o.index('visitId').getAll(vid));
+
+/* ---------- state ---------- */
+const S={role:null,name:'',cfg:null,mkey:null,sitesRev:0,pendingSites:[],lib:{},pumping:false,upv:null,compress:true,view:'home',tab:'home',group:0,org:0,q:'',cat:'',siteId:null,visitId:null,sites:[],custom:[],visits:[],geo:{},urls:[],busy:false};
+async function loadAll(){
+  S.cfg=DRIVE_URL?{url:DRIVE_URL,token:''}:(await dbGet('kv','cfg')||null);if(typeof LOCK==='number'&&ORGS[LOCK])S.org=LOCK;else{const o=await dbGet('kv','org');S.org=typeof o==='number'&&ORGS[o]?o:0}S.role=await dbGet('kv','role')||null;S.name=await dbGet('kv','name')||'';S.compress=(await dbGet('kv','compress'))!==false;
+  S.mkey=await dbGet('kv','mkey')||null;S.sitesRev=(await dbGet('kv','sitesRev'))||0;S.pendingSites=(await dbGet('kv','pendingSites'))||[];S.lib=(await dbGet('kv','lib'))||{};
+  S.custom=await dbAll('sites');S.visits=await dbAll('visits');S.geo={};for(const g of await dbAll('geo'))S.geo[g.siteId]=g;
+  const tomb=new Set(await dbGet('kv','tomb')||[]);
+  const ov=new Map(S.custom.map(c=>[c.id,c]));
+  const base=SITES.filter(s=>!tomb.has(s.id)).map(s=>({id:s.id,category:s.c,label:s.l,code:s.k,months:s.m,group:s.g,org:0,review:!!s.r}));
+  S.sites=base.map(b=>ov.has(b.id)?{...b,...ov.get(b.id)}:b).concat(S.custom.filter(c=>!base.some(b=>b.id===c.id)));S.sites.forEach(x=>{if(typeof x.org!=='number')x.org=0});
+}
+const site=id=>S.sites.find(s=>s.id===id);
+const draftOf=id=>S.visits.find(v=>v.dir==='out'&&v.siteId===id&&v.status==='draft');
+function doneMaint(id){const y=new Date().getFullYear();const set=new Set();for(const v of S.visits)if(v.siteId===id&&v.maint&&new Date(v.at).getFullYear()===y&&((v.dir==='out'&&v.status==='sent')||v.dir==='in'))set.add(v.maint);return[...set].sort()}
+async function saveVisit(v){v.updatedAt=Date.now();await dbPut('visits',v);const i=S.visits.findIndex(x=>x.id===v.id);if(i<0)S.visits.push(v);else S.visits[i]=v}
+async function ensureDraft(s){let v=draftOf(s.id);if(!v){v={id:uid(),dir:'out',siteId:s.id,siteLabel:s.label,siteCode:s.code,category:s.category,org:s.org,tech:S.name||'فني',at:Date.now(),maint:0,note:'',attachGeo:true,status:'draft',fileCount:0,bytes:0};await saveVisit(v)}return v}
+
+/* ---------- ZIP (store only) ---------- */
+const CRCT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+async function crcBlob(b){let c=0xFFFFFFFF;for(let o=0;o<b.size;o+=1<<20){const u=new Uint8Array(await b.slice(o,o+(1<<20)).arrayBuffer());for(let i=0;i<u.length;i++)c=CRCT[(c^u[i])&255]^(c>>>8)}return(c^0xFFFFFFFF)>>>0}
+async function makeZip(entries,onProg){
+  const enc=new TextEncoder(),parts=[],cd=[];let off=0;const d=new Date();
+  const dt={t:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),d:((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate()};
+  let i=0;
+  for(const e of entries){
+    const nm=enc.encode(e.name),size=e.blob.size;if(size>0xFFFFFFF0)throw new Error('ملف أكبر من 4 جيجا');
+    const crc=await crcBlob(e.blob);
+    const lh=new DataView(new ArrayBuffer(30));lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(10,dt.t,true);lh.setUint16(12,dt.d,true);lh.setUint32(14,crc,true);lh.setUint32(18,size,true);lh.setUint32(22,size,true);lh.setUint16(26,nm.length,true);
+    parts.push(lh.buffer,nm,e.blob);
+    const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(12,dt.t,true);ch.setUint16(14,dt.d,true);ch.setUint32(16,crc,true);ch.setUint32(20,size,true);ch.setUint32(24,size,true);ch.setUint16(28,nm.length,true);ch.setUint32(42,off,true);
+    cd.push(ch.buffer,nm);off+=30+nm.length+size;i++;if(onProg)onProg(i/entries.length)}
+  let cds=0;for(const p of cd)cds+=p.byteLength;
+  const end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,entries.length,true);end.setUint16(10,entries.length,true);end.setUint32(12,cds,true);end.setUint32(16,off,true);
+  return new Blob([...parts,...cd,end.buffer],{type:'application/zip'})}
+async function readZip(file){
+  const tail=await file.slice(Math.max(0,file.size-65557)).arrayBuffer(),dv=new DataView(tail);let p=-1;
+  for(let i=tail.byteLength-22;i>=0;i--)if(dv.getUint32(i,true)===0x06054b50){p=i;break}
+  if(p<0)throw new Error('الملف ليس ZIP صالحًا');
+  const n=dv.getUint16(p+10,true),cds=dv.getUint32(p+12,true),cdo=dv.getUint32(p+16,true);
+  const cb=new DataView(await file.slice(cdo,cdo+cds).arrayBuffer()),dec=new TextDecoder(),out=[];let o=0;
+  for(let i=0;i<n;i++){
+    if(cb.getUint32(o,true)!==0x02014b50)throw new Error('ملف ZIP تالف');
+    const method=cb.getUint16(o+10,true),size=cb.getUint32(o+24,true),nl=cb.getUint16(o+28,true),el=cb.getUint16(o+30,true),cl=cb.getUint16(o+32,true),lo=cb.getUint32(o+42,true);
+    if(method!==0)throw new Error('هذا الملف ليس من التطبيق (ضغط غير مدعوم)');
+    const name=dec.decode(new Uint8Array(cb.buffer,o+46,nl));
+    const lh=new DataView(await file.slice(lo,lo+30).arrayBuffer()),ds=lo+30+lh.getUint16(26,true)+lh.getUint16(28,true);
+    out.push({name,blob:file.slice(ds,ds+size)});o+=46+nl+el+cl}
+  return out}
+
+/* ---------- packaging ---------- */
+async function visitPackage(v,files,kind){
+  const geo=v.dir==='out'&&v.attachGeo!==false?S.geo[v.siteId]:null;
+  const meta={...v,coords:v.coords||(geo?{lat:geo.lat,lng:geo.lng,acc:geo.acc,at:geo.at}:null),files:files.map(f=>({id:f.id,name:f.name,type:f.type,size:f.size,kind:f.kind,at:f.at,path:`files/${f.id.slice(0,8)}_${safeName(f.name)}`}))};
+  return meta}
+async function buildZip(visits,kind,onProg){
+  const entries=[],metas=[];
+  for(const v of visits){const files=await dbFiles(v.id);const m=await visitPackage(v,files,kind);metas.push(m);files.forEach((f,i)=>entries.push({name:m.files[i].path,blob:f.blob}))}
+  const manifest={app:'sitefiles',v:1,kind,exportedAt:Date.now(),by:S.name,visits:metas};
+  if(kind==='backup'){manifest.sites=S.custom;manifest.geo=Object.values(S.geo)}
+  entries.unshift({name:'manifest.json',blob:new Blob([JSON.stringify(manifest)],{type:'application/json'})});
+  return makeZip(entries,onProg)}
+async function importZip(file){
+  const ents=await readZip(file);const map=new Map(ents.map(e=>[e.name,e.blob]));
+  const mb=map.get('manifest.json');if(!mb)throw new Error('الملف ليس تقرير من هذا التطبيق');
+  const m=JSON.parse(await mb.text());if(m.app!=='sitefiles')throw new Error('الملف ليس من هذا التطبيق');
+  let added=0,dup=0;
+  for(const v of m.visits||[]){
+    const rep=m.kind==='report';const nid=rep?'in-'+v.id:v.id;
+    if(S.visits.some(x=>x.id===nid)){dup++;continue}
+    const files=v.files||[];const rec={...v};delete rec.files;rec.id=nid;rec.fileCount=files.length;
+    if(rep){rec.origId=v.id;rec.dir='in';rec.confirmed=false;rec.receivedAt=Date.now();rec.status='received'}
+    for(const f of files){const b=map.get(f.path);if(!b)continue;await dbPut('blobs',{id:rep?'in-'+f.id:f.id,visitId:nid,name:f.name,type:f.type,size:f.size,kind:f.kind,at:f.at,blob:new Blob([b],{type:f.type})})}
+    await saveVisit(rec);added++}
+  if(m.kind==='backup'){
+    for(const s of m.sites||[])if(!S.custom.some(c=>c.id===s.id))await dbPut('sites',s);
+    for(const g of m.geo||[])if(!S.geo[g.siteId])await dbPut('geo',g);
+    if(S.role==='manager'&&S.mkey)for(const s of m.sites||[])await queueSite({...s,updatedAt:Date.now()})}
+  return{added,dup,kind:m.kind}}
+function download(blob,name){const u=URL.createObjectURL(blob);const a=h('a',{href:u,download:name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
+function summaryText(v){
+  const geo=v.coords||(v.attachGeo!==false?S.geo[v.siteId]:null);
+  return[`تقرير زيارة`,`المنظمة: ${ORGS[v.org??site(v.siteId)?.org??0]}`,`الموقع: ${v.siteLabel} (${v.siteCode})`,`الفني: ${v.tech||'-'}`,`التاريخ: ${fmtDate(v.at)}`,v.maint?`الصيانة: ${v.maint}`:'',geo?`الموقع الجغرافي: ${mapLink(geo)}`:''].filter(Boolean).join('\n')}
+
+/* ---------- files ---------- */
+async function compressImage(file){
+  if(!S.compress||!file.type.startsWith('image/')||file.type==='image/gif')return file;
+  try{const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const sc=Math.min(1,1920/Math.max(bmp.width,bmp.height));
+    if(sc===1&&file.size<1.5e6){bmp.close&&bmp.close();return file}
+    const c=document.createElement('canvas');c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);bmp.close&&bmp.close();
+    const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.82));
+    if(b&&b.size<file.size)return new File([b],file.name.replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'})}catch(e){}
+  return file}
+async function addFiles(s,list){
+  const v=await ensureDraft(s);let n=0;
+  for(const f0 of list){const f=await compressImage(f0);const type=f.type||'application/octet-stream';
+    await dbPut('blobs',{id:uid(),visitId:v.id,name:f.name||('file-'+Date.now()),type,size:f.size,kind:kindOf(type),at:Date.now(),blob:f});n++}
+  const fs=await dbFiles(v.id);v.fileCount=fs.length;v.bytes=fs.reduce((a,x)=>a+x.size,0);await saveVisit(v);return n}
+
+/* ---------- Google Drive uploader (Apps Script receiver) ---------- */
+const CH=3*1024*1024; /* 12 x 256KiB, required by Drive resumable uploads */
+function parseCfgLink(str){try{const m=String(str).match(/#cfg=([^&\s]+)/);const raw=m?m[1]:String(str).trim();const j=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));if(j&&/^https:\/\//.test(j.u)&&j.t)return{url:j.u,token:j.t}}catch(e){}return null}
+const makeCfgLink=c=>location.href.split('#')[0]+'#cfg='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({u:c.url,t:c.token})))));
+async function gcall(body,ms=120000){
+  const ac=new AbortController(),t=setTimeout(()=>ac.abort(),ms);
+  try{const r=await fetch(S.cfg.url,{method:'POST',body:JSON.stringify({...body,token:S.cfg.token,...(S.mkey?{mkey:S.mkey}:{})}),signal:ac.signal,redirect:'follow'});
+    const j=await r.json();if(!j.ok&&j.error==='auth')throw Object.assign(new Error('رمز الربط غير صحيح'),{fatal:true});return j}
+  finally{clearTimeout(t)}}
+const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]||'');r.onerror=()=>rej(r.error);r.readAsDataURL(blob)});
+
+/* ---------- مزامنة قائمة المواقع مع Drive (المدير يكتب، الكل يقرأ) ---------- */
+async function mergeCatalog(serverSites){
+  let changed=false;const tombs=new Set(await dbGet('kv','tomb')||[]);
+  for(const r of serverSites||[]){
+    if(r.deleted){tombs.add(r.id);if(S.custom.some(c=>c.id===r.id)){await dbDel('sites',r.id);changed=true}continue}
+    tombs.delete(r.id);
+    const loc=S.custom.find(c=>c.id===r.id);
+    const clean={id:r.id,label:r.label,code:r.code,category:r.category,group:r.group,org:r.org,months:r.months||[],review:!!r.review,archived:!!r.archived,updatedAt:r.updatedAt||0};
+    if(!loc||JSON.stringify({...loc,updatedAt:0})!==JSON.stringify({...clean,updatedAt:0})){await dbPut('sites',clean);changed=true}}
+  await dbPut('kv',[...tombs],'tomb');
+  if(changed)await loadAll()}
+async function pushSites(){
+  if(S.role!=='manager'||!S.mkey||!S.pendingSites.length)return;
+  const r=await gcall({action:'sites-put',sites:S.pendingSites});
+  if(!r.ok)throw new Error(r.error||'فشل رفع قائمة المواقع');
+  S.pendingSites=[];await dbPut('kv',[],'pendingSites');
+  S.sitesRev=r.rev||S.sitesRev;await dbPut('kv',S.sitesRev,'sitesRev');
+  await mergeCatalog(r.sites)}
+async function syncSites(){
+  if(!S.cfg||!navigator.onLine)return;
+  try{
+    if(S.role==='manager'&&S.mkey)await gcall({action:'verify'},30000); /* مفتاح بايظ/متجدد => gcall يرمي fatal */
+    await pushSites();
+    const r=await gcall({action:'sites-get'},60000);
+    if(r.ok&&(r.rev||0)!==S.sitesRev){S.sitesRev=r.rev||0;await dbPut('kv',S.sitesRev,'sitesRev');await mergeCatalog(r.sites);if(S.view==='home'||S.view==='site')render()}
+    /* ترحيل أول مرة: مواقع المدير المحلية تترفع للسيرفر (أجهزة الفنيين مش بترفع أبدًا) */
+    if(S.role==='manager'&&S.mkey&&!(await dbGet('kv','catMigrated'))){
+      if(S.custom.length){const r2=await gcall({action:'sites-put',sites:S.custom.map(c=>({...c,updatedAt:0}))});if(r2.ok){S.sitesRev=r2.rev||S.sitesRev;await dbPut('kv',S.sitesRev,'sitesRev');await mergeCatalog(r2.sites)}}
+      await dbPut('kv',1,'catMigrated')}}
+  catch(e){if(e.fatal){S.role='tech';S.mkey=null;await dbDel('kv','mkey');await dbPut('kv','tech','role');toast('مفتاح المدير غير صالح أو اتجدد — افتح رابط المدير من البوابة تاني');render()}}}
+async function queueSite(rec){
+  S.pendingSites=[...S.pendingSites.filter(r=>r.id!==rec.id),rec];await dbPut('kv',S.pendingSites,'pendingSites');
+  if(navigator.onLine){try{await pushSites()}catch(e){if(!e.fatal)toast('هيتزامن أول ما النت يرجع');else throw e}}}
+async function saveSite(rec){rec.updatedAt=Date.now();await dbPut('sites',rec);await loadAll();if(S.role==='manager'&&S.mkey)await queueSite(rec)}
+async function deleteSite(rec){await dbDel('sites',rec.id);S.custom=S.custom.filter(c=>c.id!==rec.id);await loadAll();if(S.role==='manager'&&S.mkey)await queueSite({id:rec.id,deleted:true,updatedAt:Date.now()})}
+
+/* ---------- مكتبة الموقع (مرفقات المدير) ---------- */
+async function libRefresh(){
+  if(!S.cfg||!navigator.onLine)return;
+  try{const r=await gcall({action:'lib-list'},60000);if(r.ok){S.lib={};for(const f of r.items||[])(S.lib[f.site]=S.lib[f.site]||[]).push(f);await dbPut('kv',S.lib,'lib');if(S.view==='site')render()}}catch(e){}}
+async function libUpload(s,list){
+  const r=await gcall({action:'lib-init',site:s.id,label:s.label});if(!r.ok)throw new Error(r.error||'فشل تجهيز المجلد');
+  let n=0;
+  for(const f of list){
+    const key='lib:'+s.id+':'+uid();
+    const ir=await gcall({action:'file-init',folder:r.folder,name:safeName(f.name),type:f.type||'application/octet-stream',size:f.size,key});
+    if(!ir.ok)throw new Error(ir.error||'فشل بدء رفع ملف');
+    let off=ir.next||0;
+    if(!ir.done){while(off<f.size){
+      const end=Math.min(off+CH,f.size);
+      const cr=await gcall({action:'chunk',key:ir.key,offset:off,data:await b64(f.slice(off,end)),size:f.size},180000);
+      if(cr.error)throw new Error(cr.error);
+      if(cr.done)off=f.size;else if(typeof cr.next==='number')off=cr.next;else if(cr.ok)off=end;else throw new Error('فشل رفع جزء من الملف')}}
+    await gcall({action:'lib-done',folder:r.folder,name:safeName(f.name)});
+    n++;toast(`تم رفع ${n} من ${list.length} للمكتبة`)}
+  await libRefresh()}
+function renderLibCard(s){
+  const box=h('div',{class:'files'});
+  const draw=()=>{const fs=(S.lib[s.id]||[]).sort((a,b)=>(b.at||0)-(a.at||0));
+    box.replaceChildren(...(fs.length?fs.map(f=>h('div',{class:'file'},
+      h('div',{style:'font-size:28px;text-align:center'},f.type&&f.type.startsWith('image/')?'🖼️':f.type&&f.type.startsWith('video/')?'🎥':f.type&&f.type.startsWith('audio/')?'🎙️':'📄'),
+      h('div',{},f.name),h('div',{class:'muted'},fmtSize(f.size||0)),
+      h('a',{href:f.url,target:'_blank',rel:'noopener'},h('button',{class:'sec'},'فتح')),
+      h('a',{href:'https://drive.google.com/uc?export=download&id='+f.id,target:'_blank',rel:'noopener'},h('button',{class:'sec'},'تحميل')))):[h('p',{class:'muted'},navigator.onLine?'مفيش مرفقات للموقع ده لسه.':'المكتبة محتاجة إنترنت أول مرة عشان تظهر.')]))};
+  const upBtn=S.role==='manager'?h('button',{class:'sec',onclick:()=>{const i=h('input',{type:'file',multiple:true,style:'display:none'});i.onchange=async()=>{if(!i.files.length)return;toast('جاري رفع المرفقات...');try{await libUpload(s,[...i.files]);toast('تم الرفع للمكتبة')}catch(e){toast('تعذر الرفع: '+(e.fatal?'مفتاح المدير غير صالح':e.message))}draw()};document.body.append(i);i.click();setTimeout(()=>i.remove(),60000)}},'رفع مرفقات للموقع'):null;
+  draw();
+  return h('div',{class:'card'},h('h3',{},'مكتبة الموقع'),h('p',{class:'muted'},S.role==='manager'?'صور أو فيديو أو ملفات مرجعية للموقع — بتظهر لكل الفنيين للعرض والتحميل.':'مرفقات مرجعية من المدير للعرض والتحميل.'),upBtn?h('div',{class:'row'},upBtn):null,box)}
+function pctOf(v){const fs=Object.values(v.up?.files||{});if(!v.bytes)return v.status==='sent'?100:0;return Math.min(100,Math.round(fs.reduce((a,s)=>a+(s.done?s.size:(s.off||0)),0)/v.bytes*100))}
+function updateBanner(){
+  const el=document.getElementById('upbar');if(!el)return;
+  const q=S.visits.filter(v=>v.dir==='out'&&v.status==='queued');
+  if(!q.length){el.hidden=true;return}
+  const cur=q.find(v=>v.id===S.upv);el.hidden=false;
+  el.firstChild.textContent=S.pumping&&cur?`جاري رفع التقرير إلى Drive... ${pctOf(cur)}%${q.length>1?` (و${q.length-1} بالانتظار)`:''}`:navigator.onLine?`${q.length} تقرير بانتظار الرفع${q[0].lastErr?' · آخر خطأ: '+q[0].lastErr:''}`:`${q.length} تقرير بانتظار الإنترنت، هيترفعوا تلقائيًا`}
+async function uploadVisit(v){
+  v.up=v.up||{files:{}};
+  const files=await dbFiles(v.id);
+  if(!v.up.folder){const r=await gcall({action:'init',reportId:v.id,org:ORGS[v.org??site(v.siteId)?.org??0],site:v.siteLabel,code:v.siteCode,tech:v.tech,at:v.at});if(!r.ok)throw new Error(r.error||'فشل إنشاء المجلد');v.up.folder=r.folder;await saveVisit(v)}
+  if(!v.up.text){
+    const m=await visitPackage(v,files,'report');
+    let r=await gcall({action:'text',folder:v.up.folder,name:'تقرير.txt',content:summaryText(v),mime:'text/plain'});if(!r.ok)throw new Error(r.error||'فشل حفظ التقرير');
+    r=await gcall({action:'text',folder:v.up.folder,name:'report.json',content:JSON.stringify({...m,up:undefined}),mime:'application/json'});if(!r.ok)throw new Error(r.error||'فشل حفظ التقرير');
+    v.up.text=true;await saveVisit(v)}
+  for(const f of files){
+    const st=v.up.files[f.id]||(v.up.files[f.id]={size:f.size,off:0});if(st.done)continue;
+    if(!st.key){const r=await gcall({action:'file-init',folder:v.up.folder,name:safeName(f.name),type:f.type,size:f.size,key:v.id+':'+f.id});
+      if(r.restart){delete v.up.files[f.id];await saveVisit(v);throw new Error('جلسة رفع قديمة اتلغت — الملف هيتبدأ من الأول في المحاولة الجاية')}
+      if(!r.ok)throw new Error(r.error||'فشل بدء رفع الملف');
+      st.key=r.key;st.off=r.next||0;if(r.done){st.done=true;await saveVisit(v);updateBanner();continue}await saveVisit(v)}
+    while(st.off<f.size){
+      const end=Math.min(st.off+CH,f.size);
+      const r=await gcall({action:'chunk',key:st.key,offset:st.off,data:await b64(f.blob.slice(st.off,end)),size:f.size},180000);
+      /* أي لغز في الجلسة = ابدأ الملف من الأول، والتقرير كله يفضل منتظر (الملفات المحلية مش بتمسح غير بعد النجاح الكامل) */
+      if(r.restart||r.error==='no session'){delete v.up.files[f.id];await saveVisit(v);throw new Error('جلسة الرفع اتلغت — الملف هيتبدأ من الأول في المحاولة الجاية')}
+      if(r.error)throw new Error(r.error); /* خطأ Drive حقيقي: وقّف ولا تتظاهر بالتقدم */
+      if(r.done)st.off=f.size;else if(typeof r.next==='number')st.off=r.next;else if(r.ok)st.off=end;else throw new Error('فشل رفع جزء من الملف');
+      await saveVisit(v);updateBanner()}
+    st.done=true;await saveVisit(v)}
+  if(!v.up.logged){const r=await gcall({action:'done',folder:v.up.folder,org:ORGS[v.org??site(v.siteId)?.org??0],site:v.siteLabel,code:v.siteCode,tech:v.tech,at:v.at,count:files.length,bytes:v.bytes||0,maint:v.maint||0,reportId:v.id});if(!r.ok)throw new Error(r.error||'فشل تسجيل التقرير');v.up.logged=true;await saveVisit(v)}
+  v.status='sent';v.sentAt=Date.now();v.lastErr='';v.purged=true;await saveVisit(v);
+  for(const f of files)await dbDel('blobs',f.id)} /* الملفات بتتمسح من الهاتف بعد ما توصل لدرايف المدير */
+async function pump(){
+  if(S.pumping||!S.cfg||!navigator.onLine)return;
+  const q=S.visits.filter(v=>v.dir==='out'&&v.status==='queued').sort((a,b)=>a.queuedAt-b.queuedAt);if(!q.length)return;
+  S.pumping=true;let ok=0;
+  try{for(const v of q){S.upv=v.id;updateBanner();try{await uploadVisit(v);ok++;toast(`تم رفع تقرير ${v.siteLabel} إلى Drive`)}catch(e){v.lastErr=e.name==='AbortError'?'انقطع الاتصال':e.message;await saveVisit(v);if(e.fatal)break}}}
+  finally{S.pumping=false;S.upv=null;updateBanner();if(ok&&(S.view==='site'||S.view==='visit'||S.view==='home'))render()}}
+async function queueVisit(v){v.status='queued';v.queuedAt=Date.now();v.lastErr='';await saveVisit(v);toast(navigator.onLine?'بدأ الرفع إلى Drive':'محفوظ. هيترفع أول ما الإنترنت يرجع');render();pump()}
+
+/* ---------- navigation ---------- */
+function go(view,extra){S.view=view;Object.assign(S,extra||{});history.pushState({view,siteId:S.siteId,visitId:S.visitId,tab:S.tab},'');render();scrollTo(0,0)}
+addEventListener('popstate',e=>{if(S.rec){history.pushState({},'');toast('أوقف التسجيل أولًا');return}const st=e.state||{view:'home',tab:'home'};S.view=st.view;S.siteId=st.siteId||null;S.visitId=st.visitId||null;S.tab=st.tab||'home';render()});
+function revokeUrls(){S.urls.forEach(u=>URL.revokeObjectURL(u));S.urls=[]}
+const objUrl=b=>{const u=URL.createObjectURL(b);S.urls.push(u);return u};
+
+/* ---------- views ---------- */
+function openDrawer(){
+  const ov=h('div',{class:'dov'});const close=()=>ov.remove();
+  const pick=async i=>{S.org=i;await dbPut('kv',i,'org');S.q='';S.cat='';S.group=0;S.tab='home';close();go('home',{siteId:null})};
+  ov.append(h('aside',{class:'drawer',role:'dialog','aria-label':'المنظمات'},h('h3',{},'المنظمات'),
+    ...ORGS.map((n,i)=>h('button',{class:'grp'+(S.org===i?' on':''),onclick:()=>pick(i)},'منظمات '+n,h('small',{},S.sites.filter(x=>x.org===i&&!x.archived).length+' موقعًا'))),
+    h('div',{class:'row'},h('button',{class:'sec',onclick:close},'إغلاق'))));
+  ov.addEventListener('click',e=>{if(e.target===ov)close()});document.body.append(ov)}
+function shell(body){
+  const nav=h('nav',{},
+    h('button',{class:S.tab==='home'?'on':'',onclick:()=>{S.tab='home';go('home')}},'المواقع'),
+    S.role==='manager'?h('button',{class:S.tab==='sent'?'on':'',onclick:()=>{S.tab='sent';go('sent')}},'المرسل'):null,
+    S.role==='manager'?h('button',{class:S.tab==='more'?'on':'',onclick:()=>{S.tab='more';go('more')}},'المزيد'):null);
+  return[h('header',{class:'hd'},(typeof LOCK==='number')?null:h('button',{class:'sec menu','aria-label':'قائمة المنظمات',onclick:openDrawer},'☰'),h('div',{},h('h1',{},'ملفات المواقع'),h('p',{},'منظمات '+ORGS[S.org]+(S.role==='manager'?' · وضع المدير':'')))),h('main',{},h('div',{id:'upbar',class:'card warn-box',hidden:true},h('span',{}),' ',h('button',{class:'sec',style:'min-height:36px;margin-inline-start:8px',onclick:()=>pump()},'إعادة المحاولة')),body),nav]}
+function render(){
+  revokeUrls();const app=document.getElementById('app');app.replaceChildren();
+  if(!S.role)S.role='tech';
+  let body;
+  if(S.view==='site')body=renderSite();else if(S.view==='visit')body=renderVisit();else if(S.view==='more'&&S.role==='manager')body=renderMore();else if(S.view==='sent'&&S.role==='manager')body=renderSent();else body=renderHome();
+  app.append(...shell(body));updateBanner()}
+
+function renderSetup(){
+  const name=h('input',{id:'nm',placeholder:'اسمك',autocomplete:'name'});
+  const enter=async role=>{if(!name.value.trim()){toast('اكتب اسمك');return}
+    await dbPut('kv',role,'role');await dbPut('kv',name.value.trim(),'name');try{navigator.storage?.persist?.()}catch(e){}await loadAll();go('home')};
+  return[h('header',{},h('h1',{},'ملفات المواقع'),h('p',{},'منظمات بني سويف · الواسطي · الفشن')),h('main',{},
+    h('div',{class:'card'},h('h2',{},'أهلًا بيك'),h('label',{for:'nm'},'اكتب اسمك'),name,
+      h('button',{style:'width:100%',onclick:()=>enter('tech')},'دخول على المواقع')),
+    h('p',{class:'muted'},'كل بياناتك محفوظة على هذا الهاتف، والتقارير بتترفع أوتوماتيك. خد نسخة احتياطية من "المزيد" بشكل دوري.'))]}
+
+function renderHome(){
+  const list=h('div',{}),count=h('p',{class:'muted'});
+  const draw=()=>{
+    const q=S.q.trim().toLowerCase();const inG=S.sites.filter(s=>s.org===S.org&&s.group===S.group&&!s.archived);
+    const rows=inG.filter(s=>(!S.cat||s.category===S.cat)&&(!q||(s.label+' '+s.code).toLowerCase().includes(q)));
+    count.textContent=inG.length?`${rows.length} من ${inG.length} موقعًا في القسم`:(S.role==='manager'?'مفيش مواقع هنا لسه. اضغط "إضافة موقع جديد".':'مفيش مواقع في القسم ده لسه.');list.replaceChildren(...rows.map(s=>{
+      const d=draftOf(s.id),dm=doneMaint(s.id),sent=S.visits.filter(v=>v.siteId===s.id&&v.dir==='out'&&v.status==='sent').sort((a,b)=>b.sentAt-a.sentAt)[0];
+      return h('button',{class:'site',onclick:()=>go('site',{siteId:s.id})},h('span',{class:'muted'},s.category),h('strong',{},s.label),h('bdi',{class:'muted'},s.code),
+        h('span',{class:'chips'},d&&d.fileCount?h('span',{class:'chip warn'},`مسودة · ${d.fileCount} ملف`):null,S.visits.some(v=>v.siteId===s.id&&v.dir==='out'&&v.status==='queued')?h('span',{class:'chip warn'},'بانتظار الرفع'):null,dm.length?h('span',{class:'chip ok'},'صيانة '+dm.join('، ')+' هذا العام'):null,sent?h('span',{class:'chip'},'آخر إرسال '+new Date(sent.sentAt).toLocaleDateString('ar-EG-u-nu-latn')):null,S.geo[s.id]?h('span',{class:'chip'},'📍 محفوظ'):null,s.review?h('span',{class:'chip warn'},'الاسم يحتاج مراجعة'):null))}))};
+  const search=h('input',{id:'q',type:'search',placeholder:'ابحث بالاسم أو الكود',value:S.q,oninput:e=>{S.q=e.target.value;draw()}});
+  const cat=h('select',{id:'cat',onchange:e=>{S.cat=e.target.value;draw()}},h('option',{value:''},'كل التصنيفات'),CATS.map(c=>h('option',{value:c,selected:S.cat===c},c)));
+  const node=h('div',{},h('h2',{},'منظمات '+ORGS[S.org]),h('div',{class:'groups'},GN.map((n,i)=>h('button',{class:'grp'+(S.group===i?' on':''),onclick:()=>{S.group=i;S.q='';S.cat='';render()}},n,h('small',{},S.sites.filter(s=>s.org===S.org&&s.group===i&&!s.archived).length+' موقعًا')))),
+    h('label',{for:'q'},'بحث'),search,h('label',{for:'cat'},'التصنيف'),cat,count,list,
+    S.role==='manager'?h('div',{class:'row'},h('button',{class:'sec',onclick:()=>editSite(null)},'+ إضافة موقع جديد')):null);
+  draw();return node}
+
+function editSite(s){
+  const nm=h('input',{id:'sn',value:s?s.label:''}),cd=h('input',{id:'sc',value:s?s.code:'',dir:'ltr'});
+  const ct=h('select',{id:'ct'},CATS.map(c=>h('option',{value:c,selected:s?.category===c},c)));
+  const og=h('select',{id:'og'},ORGS.map((n,i)=>h('option',{value:i,selected:(s?s.org:S.org)===i},'منظمات '+n)));
+  const gp=h('select',{id:'gp'},GN.map((n,i)=>h('option',{value:i,selected:(s?s.group:S.group)===i},n)));
+  modal(s?'تعديل الموقع':'موقع جديد',[h('label',{for:'sn'},'اسم الموقع'),nm,h('label',{for:'sc'},'الكود'),cd,h('label',{for:'ct'},'التصنيف'),ct,h('label',{for:'og'},'المنظمة'),og,h('label',{for:'gp'},'القسم'),gp],close=>[
+    h('button',{onclick:async()=>{if(!nm.value.trim()){toast('اكتب اسم الموقع');return}
+      const months=[[1,4,7,10],[2,5,8,11],[3,6,9,12],[]][+gp.value];
+      const rec={...(s?S.custom.find(c=>c.id===s.id)||{id:s.id}:{id:'N'+uid().slice(0,8)}),label:nm.value.trim(),code:cd.value.trim()||nm.value.trim(),category:ct.value,group:+gp.value,org:+og.value,months,review:false};
+      await saveSite(rec);close();render()}},'حفظ'),
+    s?h('button',{class:'bad',onclick:async()=>{if(!confirm('أرشفة الموقع؟ الملفات والتقارير تفضل محفوظة.'))return;const rec={...(S.custom.find(c=>c.id===s.id)||{id:s.id}),archived:true};await saveSite(rec);close();go('home',{siteId:null})}},'أرشفة'):null,
+    s?h('button',{class:'bad',onclick:async()=>{if(!confirm('حذف نهائي من التطبيق عندك وعند كل الفنيين؟ تقارير الموقع المرسلة تفضل في Drive.'))return;const rec=S.custom.find(c=>c.id===s.id)||{id:s.id};await deleteSite(rec);close();go('home',{siteId:null})}},'حذف نهائي'):null,
+    h('button',{class:'sec',onclick:close},'إلغاء')])}
+
+/* ----- site screen ----- */
+function renderSite(){
+  const s=site(S.siteId);if(!s)return h('p',{},'الموقع غير موجود');
+  const back=h('button',{class:'sec',onclick:()=>history.back()},'رجوع للمواقع');
+  const dm=doneMaint(s.id);
+  /* gps */
+  const gpsInfo=h('p',{class:'muted'}),gpsSt=h('p',{class:'status'});
+  const drawGeo=()=>{const g=S.geo[s.id];gpsInfo.replaceChildren(g?h('span',{},`محفوظ: `,h('bdi',{dir:'ltr'},`${g.lat.toFixed(6)}, ${g.lng.toFixed(6)}`),` · دقة ${g.acc} متر · ${fmtDate(g.at)}`):'لم يُحفظ موقع جغرافي.')};
+  let watch=null;
+  const stopGps=async(save)=>{if(!watch)return;navigator.geolocation.clearWatch(watch.id);clearTimeout(watch.t);const b=watch.best;watch=null;btnGps.textContent='حفظ مكاني الحالي';
+    if(save&&b){const rec={siteId:s.id,...b};await dbPut('geo',rec);S.geo[s.id]=rec;gpsSt.textContent=`تم الحفظ بدقة ${b.acc} متر.`;drawGeo()}else if(save)gpsSt.textContent='لم نلتقط إشارة. اطلع مكان مفتوح وجرب تاني.'};
+  const btnGps=h('button',{onclick:()=>{
+    if(watch){stopGps(true);return}
+    if(!navigator.geolocation){toast('الجهاز لا يدعم تحديد الموقع');return}
+    gpsSt.textContent='جاري التقاط الإشارة...';btnGps.textContent='إيقاف وحفظ الأفضل';
+    watch={best:null};
+    watch.id=navigator.geolocation.watchPosition(p=>{const c={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy),at:Date.now()};if(!watch)return;if(!watch.best||c.acc<watch.best.acc)watch.best=c;gpsSt.textContent=`الدقة الحالية ${c.acc} متر`;if(c.acc<=12)stopGps(true)},
+      err=>{gpsSt.textContent=err.code===1?'الإذن مرفوض. فعّل الموقع للتطبيق من إعدادات المتصفح.':'تعذر التقاط الموقع، جرب مكان مفتوح.';if(watch){clearTimeout(watch.t);navigator.geolocation.clearWatch(watch.id);watch=null;btnGps.textContent='حفظ مكاني الحالي'}},{enableHighAccuracy:true,maximumAge:0,timeout:30000});
+    watch.t=setTimeout(()=>stopGps(true),30000)}},'حفظ مكاني الحالي');
+  const btnMap=h('button',{class:'sec',onclick:()=>{const g=S.geo[s.id];if(!g){toast('احفظ الموقع الأول');return}window.open(mapLink(g),'_blank')}},'فتح الخريطة');
+  const btnRm=h('button',{class:'sec bad',onclick:async()=>{if(!S.geo[s.id]||!confirm('إزالة الموقع المحفوظ؟'))return;await dbDel('geo',s.id);delete S.geo[s.id];drawGeo()}},'إزالة');
+  drawGeo();
+  /* maintenance */
+  const d=draftOf(s.id);
+  const maint=h('select',{id:'mt',onchange:async e=>{const v=await ensureDraft(s);v.maint=+e.target.value;await saveVisit(v)}},h('option',{value:0},'لم تُحدد'),[1,2,3,4].map(n=>h('option',{value:n,selected:d?.maint===n},'الصيانة '+['الأولى','الثانية','الثالثة','الرابعة'][n-1])));
+  /* files */
+  const filesBox=h('div',{class:'files'}),fcount=h('p',{class:'muted'});
+  const drawFiles=async()=>{revokeUrls();const v=draftOf(s.id);const fs=v?await dbFiles(v.id):[];fcount.textContent=fs.length?`${fs.length} ملف · ${fmtSize(fs.reduce((a,f)=>a+f.size,0))}`:'لا توجد ملفات في الزيارة الحالية.';
+    filesBox.replaceChildren(...fs.map(f=>h('div',{class:'file'},
+      f.kind==='image'?h('img',{src:objUrl(f.blob),alt:f.name}):f.kind==='video'?h('video',{src:objUrl(f.blob),controls:true,preload:'metadata'}):f.kind==='audio'?h('audio',{src:objUrl(f.blob),controls:true}):h('div',{},'📄'),
+      h('div',{},f.name),h('div',{class:'muted'},fmtSize(f.size)),
+      h('button',{class:'sec bad',onclick:async()=>{if(!confirm('حذف الملف من الزيارة؟'))return;await dbDel('blobs',f.id);const vv=draftOf(s.id);const rest=await dbFiles(vv.id);vv.fileCount=rest.length;vv.bytes=rest.reduce((a,x)=>a+x.size,0);await saveVisit(vv);drawFiles()}},'حذف'))))};
+  const pick=(accept,capture)=>{const i=h('input',{type:'file',accept,multiple:!capture,style:'display:none'});if(capture)i.setAttribute('capture','environment');i.onchange=async()=>{if(!i.files.length)return;toast('جاري الحفظ...');try{const n=await addFiles(s,[...i.files]);toast(`تمت إضافة ${n} ملف`)}catch(e){toast('تعذر الحفظ: '+e.message)}drawFiles()};document.body.append(i);i.click();setTimeout(()=>i.remove(),60000)};
+  /* voice */
+  const btnRec=h('button',{class:'sec',onclick:async()=>{
+    if(S.rec){S.rec.stop();return}
+    if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){toast('الجهاز لا يدعم تسجيل الصوت');return}
+    try{const st=await navigator.mediaDevices.getUserMedia({audio:true});const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+      const rec=new MediaRecorder(st,mt?{mimeType:mt}:{});const chunks=[];const t0=Date.now();
+      const tick=setInterval(()=>{btnRec.textContent=`إيقاف وحفظ (${Math.floor((Date.now()-t0)/1000)} ث)`},500);
+      rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+      rec.onstop=async()=>{clearInterval(tick);st.getTracks().forEach(t=>t.stop());S.rec=null;btnRec.textContent='تسجيل فويس';const type=(rec.mimeType||'audio/webm').split(';')[0];const ext=type.includes('mp4')?'m4a':'webm';
+        try{await addFiles(s,[new File([new Blob(chunks,{type})],`voice-${new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')}.${ext}`,{type})]);toast('تم حفظ التسجيل')}catch(e){toast('تعذر حفظ التسجيل')}drawFiles()};
+      S.rec=rec;rec.start(1000);btnRec.textContent='إيقاف وحفظ (0 ث)'}catch(e){toast('الميكروفون غير متاح أو الإذن مرفوض')}}},'تسجيل فويس');
+  /* send */
+  const btnSend=h('button',{onclick:async()=>{const v=draftOf(s.id);if(!v||(!v.fileCount&&!v.maint)){toast('أضف ملفات أولًا');return}if(S.rec){toast('أوقف التسجيل أولًا');return}
+    if(!S.cfg){toast('الرفع مش مفعّل لسه. كلّم المدير');return}queueVisit(v)}},'إرسال إلى Drive');
+  /* history */
+  const hist=S.visits.filter(v=>v.siteId===s.id&&!(v.dir==='out'&&v.status==='draft')).sort((a,b)=>(b.sentAt||b.at)-(a.sentAt||a.at));
+  const node=h('div',{},back,h('h2',{},s.label),h('bdi',{class:'muted'},s.code),
+    h('p',{class:'muted'},s.months.length?'أشهر السجل: '+s.months.join('، ')+' (بيانات السجل وليست مواعيد مؤكدة)':'قسم حياة كريمة'),
+    dm.length?h('p',{},h('span',{class:'chip ok'},'تمت هذا العام: صيانة '+dm.join('، '))):null,
+    S.role==='manager'?h('div',{class:'row'},h('button',{class:'sec',onclick:()=>editSite(s)},'تعديل الموقع')):null,
+    h('div',{class:'card'},h('h3',{},'الموقع الجغرافي'),h('p',{class:'muted'},'وأنت في الموقع، احفظ مكانك. بيشتغل من غير إنترنت، وفي مكان مفتوح بيكون أدق.'),gpsInfo,gpsSt,h('div',{class:'row'},btnGps,btnMap,btnRm)),
+    h('div',{class:'card'},h('h3',{},'ملفات الزيارة'),h('label',{for:'mt'},'الصيانة'),maint,h('p',{class:'muted'},'الصور بتتصغّر تلقائيًا قبل الحفظ عشان الإرسال يكون أسرع.'),
+      h('div',{class:'row'},h('button',{onclick:()=>pick('image/*',true)},'📷 تصوير'),h('button',{onclick:()=>pick('video/*',true)},'🎥 فيديو'),h('button',{class:'sec',onclick:()=>pick('image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt')},'من الهاتف'),btnRec),fcount,filesBox),
+    h('div',{class:'card'},h('h3',{},'الإرسال'),h('p',{class:'muted'},S.cfg?'التقرير بيترفع للمدير أول ما يكون فيه إنترنت، وبيتمسح من الهاتف بعد ما يوصل.':'الرفع مش مفعّل لسه، كلّم المدير.'),h('div',{class:'row'},btnSend)),
+    renderLibCard(s),
+    hist.length?h('div',{class:'card'},h('h3',{},'الزيارات السابقة'),...hist.map(v=>h('button',{class:'site',onclick:()=>go('visit',{visitId:v.id})},h('strong',{},(v.dir==='in'?'وارد من '+(v.tech||'فني'):v.status==='queued'?'بانتظار الرفع':'مُرسل')+' · '+fmtDate(v.sentAt||v.receivedAt||v.at)),h('span',{class:'muted'},`${v.fileCount||0} ملف${v.maint?' · صيانة '+v.maint:''}${v.status==='queued'?' · '+pctOf(v)+'%':''}`)))):null);
+  drawFiles();return node}
+
+/* ----- visit view (history / inbox) ----- */
+function renderVisit(){
+  const v=S.visits.find(x=>x.id===S.visitId);if(!v)return h('p',{},'الزيارة غير موجودة');
+  const box=h('div',{class:'files'});
+  dbFiles(v.id).then(fs=>box.replaceChildren(...fs.map(f=>h('div',{class:'file'},
+    f.kind==='image'?h('img',{src:objUrl(f.blob),alt:f.name}):f.kind==='video'?h('video',{src:objUrl(f.blob),controls:true,preload:'metadata'}):f.kind==='audio'?h('audio',{src:objUrl(f.blob),controls:true}):h('div',{},'📄'),
+    h('div',{},f.name),h('div',{class:'muted'},fmtSize(f.size)),h('button',{class:'sec',onclick:()=>download(f.blob,f.name)},'حفظ')))));
+  const c=v.coords||(v.dir==='out'&&v.attachGeo!==false?S.geo[v.siteId]:null);
+  const acts=[];
+  if(v.dir==='out'&&v.status==='queued')acts.push(h('button',{onclick:()=>pump()},'إعادة محاولة الرفع'));
+    acts.push(
+    h('button',{class:'sec bad',onclick:async()=>{if(!confirm('حذف الزيارة من هذا الهاتف؟'))return;for(const f of await dbFiles(v.id))await dbDel('blobs',f.id);await dbDel('visits',v.id);S.visits=S.visits.filter(x=>x.id!==v.id);history.back()}},'حذف'));
+  return h('div',{},h('button',{class:'sec',onclick:()=>history.back()},'رجوع'),h('h2',{},v.siteLabel),h('bdi',{class:'muted'},v.siteCode),
+    h('div',{class:'card'},h('p',{},'الفني: '+(v.tech||'-')),h('p',{},'التاريخ: '+fmtDate(v.at)),v.maint?h('p',{},'الصيانة: '+v.maint):null,
+      v.dir==='in'?h('p',{},v.confirmed?h('span',{class:'chip ok'},'مؤكد '+fmtDate(v.confirmedAt)):h('span',{class:'chip warn'},'بانتظار التأكيد')):h('p',{},v.status==='sent'?'أُرسل '+fmtDate(v.sentAt):v.status==='queued'?`بانتظار الرفع إلى Drive (${pctOf(v)}%)${v.lastErr?' · '+v.lastErr:''}`:'مسودة'),
+      c?h('p',{},'الموقع: ',h('bdi',{dir:'ltr'},`${(+c.lat).toFixed(6)}, ${(+c.lng).toFixed(6)}`),' ',h('a',{href:mapLink(c),target:'_blank',rel:'noopener',style:'color:var(--acc)'},'فتح الخريطة')):null,
+      ),
+    h('div',{class:'card'},h('h3',{},'الملفات'),v.purged?h('p',{class:'muted'},'اتبعتت واتخزّنت عند المدير، ومتمسحة من الهاتف ده.'):box),h('div',{class:'row'},acts))}
+
+/* ----- more ----- */
+function driveCard(){
+  if(S.role!=='manager')return null;
+  const st=h('p',{class:'status'});
+  if(DRIVE_URL)return h('div',{class:'card'},h('h3',{},'الرفع إلى Google Drive'),h('p',{},h('span',{class:'chip ok'},'مربوط تلقائيًا')),h('p',{class:'muted'},'كل تقارير الفنيين بتتخزن في Drive بتاعك. شوفها من تبويب "المرسل".'));
+  const u=h('input',{id:'gu',placeholder:'https://script.google.com/macros/s/.../exec',dir:'ltr',value:S.cfg?.url||''});
+  return h('div',{class:'card'},h('h3',{},'الرفع إلى Google Drive'),
+    h('p',{class:'muted'},'الصق رابط السكريبت هنا (أو الأفضل تحطه في DRIVE_URL جوه index.html عشان الفنيين يرفعوا من غير أي إعداد).'),
+    h('label',{for:'gu'},'رابط السكريبت'),u,
+    h('div',{class:'row'},h('button',{onclick:async()=>{const c={url:u.value.trim(),token:''};if(!/^https:\/\//.test(c.url)){st.textContent='اكتب الرابط.';return}
+      const old=S.cfg;S.cfg=c;st.textContent='جاري الاختبار...';
+      try{const r=await gcall({action:'ping'},30000);if(r.ok){await dbPut('kv',c,'cfg');toast('تم الربط');render();pump()}else{S.cfg=old;st.textContent='فشل: '+(r.error||'')}}catch(e){S.cfg=old;st.textContent='تعذر الاتصال: '+e.message}}},'اختبار وحفظ'),
+      S.cfg?h('button',{class:'sec bad',onclick:async()=>{await dbDel('kv','cfg');S.cfg=null;render()}},'فصل'):null),st)}
+function renderSent(){
+  const box=h('div'),st=h('p',{class:'status'});let items=[],org='';
+  const draw=()=>{const rows=items.filter(x=>!org||x.org===org);box.replaceChildren(...(rows.length?rows.map(x=>h('div',{class:'card'},h('span',{class:'muted'},x.org||'-'),h('h3',{},x.site),h('p',{class:'muted'},`الفني: ${x.tech||'-'} · ${fmtDate(x.at)}`),h('p',{},`${x.count} ملف · ${fmtSize(x.bytes||0)}${x.maint?' · صيانة '+x.maint:''}`),h('div',{class:'row'},h('a',{href:'https://drive.google.com/drive/folders/'+x.folder,target:'_blank',rel:'noopener'},h('button',{},'فتح في Drive'))))):[h('p',{class:'muted'},'مفيش تقارير لسه.')]))};
+  const load=async()=>{if(!S.cfg){st.textContent='اربط Drive الأول.';return}st.textContent='جاري التحميل...';try{const r=await gcall({action:'list'},60000);if(!r.ok)throw new Error(r.error||'');items=r.items||[];st.textContent='';draw()}catch(e){st.textContent='تعذر التحميل: '+e.message}};
+  const sel=h('select',{id:'fo',onchange:e=>{org=e.target.value;draw()}},h('option',{value:''},'كل المنظمات'),ORGS.map(n=>h('option',{value:n},'منظمات '+n)));
+  load();return h('div',{},h('h2',{},'التقارير المرسلة'),h('p',{class:'muted'},'اللي الفنيين بعتوه بيتخزن في Drive بتاعك ومبيفضلش على هواتفهم.'),h('label',{for:'fo'},'المنظمة'),sel,h('div',{class:'row'},h('button',{class:'sec',onclick:load},'تحديث')),st,box)}
+function renderMore(){
+  const st=h('p',{class:'status'}),usage=h('p',{class:'muted'},'...');
+  navigator.storage?.estimate?.().then(e=>{usage.textContent=`المساحة المستخدمة: ${fmtSize(e.usage||0)} من ${fmtSize(e.quota||0)}`});
+  const arch=S.sites.filter(s=>s.archived);
+  return h('div',{},h('h2',{},'المزيد'),driveCard(),
+    h('div',{class:'card'},h('h3',{},'النسخة الاحتياطية'),h('p',{class:'muted'},'بياناتك على هذا الهاتف فقط. لو مسحت بيانات المتصفح أو التطبيق هتضيع. خد نسخة وخزّنها برا الهاتف.'),
+      h('div',{class:'row'},h('button',{onclick:async()=>{st.textContent='جاري تجهيز النسخة...';try{const z=await buildZip(S.visits,'backup');download(z,`sitefiles-backup-${new Date().toISOString().slice(0,10)}.zip`);st.textContent=`تم التجهيز (${fmtSize(z.size)}).`}catch(e){st.textContent='تعذر: '+e.message}}},'تصدير نسخة كاملة'),
+        h('button',{class:'sec',onclick:()=>{const i=h('input',{type:'file',accept:'.zip',style:'display:none'});i.onchange=async()=>{try{const r=await importZip(i.files[0]);await loadAll();st.textContent=r.kind==='backup'?`تمت الاستعادة: ${r.added} زيارة جديدة${r.dup?` (${r.dup} موجودة)`:''}`:`الملف ده تقرير مش نسخة احتياطية. تم استيراده كوارد: ${r.added}`;render()}catch(e){st.textContent='تعذر: '+e.message}};document.body.append(i);i.click()}},'استعادة نسخة')),st),
+    h('div',{class:'card'},h('h3',{},'الإعدادات'),
+      h('label',{for:'nm2'},'الاسم (اختياري)'),h('input',{id:'nm2',value:S.name,onchange:async e=>{S.name=e.target.value.trim();await dbPut('kv',S.name,'name')}}),
+      h('label',{for:'cmp'},h('input',{id:'cmp',type:'checkbox',checked:S.compress,style:'display:inline-block;width:auto;margin-inline-end:8px',onchange:async e=>{S.compress=e.target.checked;await dbPut('kv',S.compress,'compress')}}),'تصغير الصور تلقائيًا'),
+      h('div',{class:'row'},h('button',{class:'sec',onclick:async()=>{const ok=await navigator.storage?.persist?.();toast(ok?'التخزين محمي من المسح التلقائي':'المتصفح لم يمنح الحماية. ثبّت التطبيق على الشاشة الرئيسية.')}},'حماية التخزين'),
+        S.role==='manager'?h('button',{class:'sec',onclick:async()=>{await dbPut('kv','tech','role');S.role='tech';S.tab='home';go('home')}},'الرجوع لوضع الفني'):null),usage),
+    arch.length&&S.role==='manager'?h('div',{class:'card'},h('h3',{},'المواقع المؤرشفة'),...arch.map(s=>h('div',{class:'row'},h('span',{style:'flex:2 1 160px'},s.label),h('button',{class:'sec',onclick:async()=>{const rec={...(S.custom.find(c=>c.id===s.id)||{id:s.id}),archived:false};await saveSite(rec);render()}},'استرجاع')))):null,
+    h('p',{class:'muted'},`ملفات المواقع ${APP_VERSION} · Designed by Eng. Amr Hazem (الفكرة الأصلية). أشهر السجل بيانات من السجل وليست مواعيد مؤكدة.`))}
+
+/* ---------- boot ---------- */
+(async()=>{
+  try{_db=await openDB();await loadAll();
+    if(location.hash.startsWith('#cfg=')){const c=parseCfgLink(location.hash);if(c){await dbPut('kv',c,'cfg');S.cfg=c;setTimeout(()=>toast('تم ربط التطبيق بـ Google Drive'),400)}}
+    if(location.hash.startsWith('#mkey=')){const k=location.hash.slice(6).trim();if(k){S.mkey=k;await dbPut('kv',k,'mkey');S.role='manager';await dbPut('kv','manager','role');setTimeout(()=>toast('تم فتح وضع المدير'),400)}}
+    /* #admin اتلغى: دخول المدير من بوابة المدير فقط */
+    if(!S.role){S.role='tech';await dbPut('kv','tech','role')}
+    if(S.role==='manager'&&!S.mkey){S.role='tech';await dbPut('kv','tech','role')}
+    try{navigator.storage?.persist?.()}catch(e){}
+    history.replaceState({view:'home',tab:'home'},'',location.pathname+location.search);render();
+    addEventListener('online',()=>{updateBanner();pump();syncSites();libRefresh()});addEventListener('offline',updateBanner);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden){pump();syncSites();libRefresh()}});
+    setInterval(pump,30000);pump();syncSites();libRefresh()}
+  catch(e){document.getElementById('app').append(h('main',{},h('div',{class:'card'},h('h2',{},'التخزين غير متاح'),h('p',{},'المتصفح مانع التخزين المحلي (وضع التصفح الخاص غالبًا). افتح التطبيق في نافذة عادية.'))))}
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+  addEventListener('beforeunload',e=>{if(S.rec){e.preventDefault();e.returnValue=''}});
+})();
+</script>
+</body>
+</html>
